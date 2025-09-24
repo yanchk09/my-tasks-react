@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 5. Условный рендеринг</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: 1px solid #81b4cb;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            background: #fff;
+        }
+        
+        .toggle {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .user-card {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: #f0f0f0;
+        }
+
+        .admin {
+            background: #ffe3e3;
+            border-left: 4px solid #fd6e6e;
+        }
+
+        .user {
+            background: #d9ffdd;
+            border-left: 4px solid #90cb81;
+        }
+
+        .loading {
+            text-align: center;
+            color: #666;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const App = () => {
+            const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+            const [userRole, setUserRole] = React.useState('user');
+            const [isLoading, setIsLoading] = React.useState(true);
+
+            React.useEffect(() => {
+                const timer = setTimeout(() => {
+                    setIsLoading(false);
+                }, 2000);
+                return () => clearTimeout(timer);
+            }, []);
+
+            if (isLoading) {
+                return (
+                    <div className="container">
+                        <div className="loading">
+                            <h2>Загрузка...</h2>
+                            <p>Пожалуйста, подождите</p>
+                        </div>
+                    </div>
+                );
+            }
+
+            return (
+                <div className="container">
+                    <h1>Условный рендеринг</h1>
+                    { }
+                    {isLoggedIn ? (
+                        <div>
+                            <h3>Добро пожаловать!</h3>
+                            <button onClick={() => setIsLoggedIn(false)}>Выйти</button>
+                        </div>
+                    ) : (
+                        <div>
+                            <h3>Пожалуйста, войдите</h3>
+                            <button onClick={() => setIsLoggedIn(true)}>Войти</button>
+                        </div>
+                    )}
+
+                    { }
+
+                    {isLoggedIn && (
+                        <div className={`user-card ${userRole}`}>
+                            <h4>Профиль пользователя</h4>
+                            <p>Роль: {userRole}</p>
+                            <button onClick={() => setUserRole(userRole === 'admin' ? 'user' : 'admin')}> Сменить роль на {userRole === 'admin' ? 'пользователь' : 'администратор'}</button>
+                        </div>
+                    )}
+
+                    { }
+
+                    {isLoggedIn && (
+                        <p style={{ color: '#666', marginTop: '20px' }}> Для доступа к профилю необходимо войти в систему </p>
+                    )}
+                </div>
+            );
+        };
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+
+</html>

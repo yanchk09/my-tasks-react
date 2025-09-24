@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Props передача</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: #fff;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+        .user-card {
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 10px 0;
+            text-align: center;
+        }
+        .admin {
+            border-color: #50af27;
+            background: #f5fff7;
+        }
+        .user {
+            border-color: #4e89cd;
+            background: #f0f7ff;
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const UserCard = ({name, age, isAdmin}) => {
+            return (
+                <div className={`user-card ${isAdmin ? 'admin' : 'user'}`}>
+                    <h3>{name}</h3>
+                    <p>Возраст: {age}</p>
+                    <p>Статус: {isAdmin ? 'Администратор' : 'Пользователь'}</p>
+                </div>
+            );
+        };
+
+        const App = () => {
+            const users = [
+                {id: 1, name: 'Иван', age: 25, isAdmin: true},
+                {id: 2, name: 'Анна', age: 30, isAdmin: false},
+                {id: 3, name: 'Виктория', age: 27, isAdmin: false}
+            ];
+
+            return (
+                <div className="container">
+                    <h1>Передача данных</h1>
+                    {users.map(user => (
+                        <UserCard key = {user.id} name = {user.name} age = {user.age} isAdmin = {user.isAdmin} />
+                    ))}
+                </div>
+            );
+        };
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 3. State счетчик</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .counter {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 0 5px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .increment {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .decrement {
+            background: #f44336;
+            color: white;
+        }
+
+        .reset {
+            background: #2196F3;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const Counter = () => {
+            const [count, setCount] = React.useState(0);
+            const increment = () => setCount(count + 1);
+            const decrement = () => setCount(count - 1);
+            const reset = () => setCount(0);
+
+            return (
+                <div className="container">
+                    <h1>Счетчик с локальным состоянием</h1>
+                    <div className="counter">{count}</div>
+                    <div>
+                        <button className="increment" onClick={increment}>+1</button>
+                        <button className="decrement" onClick={decrement}>-1</button>
+                        <button className="reset" onClick={reset}>Сброс</button>
+                    </div>
+                    <p>Текущее значение: {count}</p>
+                </div>
+            );
+        };
+        ReactDOM.render(<Counter />, document.getElementById('root'));
+    </script>
+</body>
+
+</html>

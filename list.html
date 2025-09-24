@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 6. Список элементов</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .todo-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 5px;
+            border-left: 4px solid #74b9ff;
+        }
+
+        .completed {
+            text-decoration: line-through;
+            opacity: 0.6;
+            border-left-color: #00b894;
+        }
+
+        button {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+
+        .complete-btn {
+            background: #00b894;
+            color: white;
+        }
+
+        .delete-btn {
+            background: #ff7675;
+            color: white;
+        }
+
+        .add-form {
+            display: flex;
+            margin: 20px 0;
+        }
+
+        input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .add-btn {
+            background: #74b9ff;
+            color: white;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            padding: 0 15px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const App = () => {
+            const [todos, setTodos] = React.useState([
+                {id: 1, text: 'Изучить React', completed: false},
+                {id: 2, text: 'Разобраться с состоянием', completed: false},
+                {id: 3, text: 'Создать первый компонент', completed: true},
+                {id: 4, text: 'Узнать, что такое JSX', completed: false}
+                
+            ]);
+            const [newTodo, setNewTodo] = React.useState('');
+
+            const addTodo = () => {
+                if (newTodo.trim()) {
+                    setTodos([...todos, {
+                        id: Date.now(),
+                        text: newTodo,
+                        completed: false
+                    }]);
+                    setNewTodo('');
+                }
+            };
+
+            const toggleTodo = (id) => {
+                setTodos(todos.map(todo =>
+                    todo.id === id ? { ...todo, completed: !todo.completed } : todo
+                ));
+            };
+
+            const deleteTodo = (id) => {
+                setTodos(todos.filter(todo => todo.id !== id));
+            };
+
+            const handleKeyPress = (e) => {
+                if (e.key === 'Enter') {
+                    addTodo();
+                }
+            };
+
+            return (
+                <div className="container">
+                    <h1>Рендеринг списка элементов</h1>
+
+                    <div className="add-form">
+                        <input type="text" value={newTodo} onChange={(e) => setNewTodo(e.target.value)} onKeyPress={handleKeyPress} placeholder="Добавить новую задачу..."/>
+                        <button className="add-btn" onClick={addTodo}>+</button>
+                    </div>
+
+                    <div>
+                        {todos.map(todo => (
+                            <div key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
+                                <span onClick={() => toggleTodo(todo.id)} style={{ cursor: 'pointer' }}>
+                                    {todo.text}
+                                </span>
+                                <div>
+                                    <button className="complete-btn" onClick={() => toggleTodo(todo.id)}>
+                                        {todo.completed ? 'Отменить' : 'Выполнить'}
+                                    </button>
+                                    <button className="delete-btn" onClick={() => deleteTodo(todo.id)}>Удалить</button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div style={{ marginTop: '15px', color: '#666' }}>
+                        Всего задач: {todos.length} |
+                        Выполнено: {todos.filter(t => t.completed).length}
+                    </div>
+                </div>
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+
+</html>
