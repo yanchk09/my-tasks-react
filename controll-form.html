@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Задание 7. Форма с контролем</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #c8f0ff 0%, #98c8e8 100%);
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            min-width: 550px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            margin-top: 0;
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin-bottom: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            color: #222;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            box-sizing: border-box;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus,
+        textarea:focus {
+            border-color: #0984e3;
+            outline: none;
+        }
+
+        textarea {
+            resize: vertical;
+            /* Можно менять только по вертикали */
+            min-height: 80px;
+        }
+
+        .character-count {
+            margin-top: 4px;
+            font-size: 13px;
+            text-align: right;
+            color: #666;
+        }
+
+        .error {
+            margin-top: 4px;
+            color: #e74c3c;
+            font-size: 13px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #222;
+        }
+
+        .checkbox-label input {
+            margin-right: 8px;
+            transform: scale(1.1);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 14px;
+            background-color: #00cec9;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .submit-btn:hover {
+            background-color: #00b2b0;
+        }
+
+        .form-data {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow-wrap: break-word;
+        }
+
+        /* Общие стили для хорошего вида */
+        @media(max-width: 600px) {
+            .container {
+                padding: 30px 20px;
+            }
+
+            h1 {
+                font-size: 20px;
+            }
+
+            p {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const App = () => {
+            const [formData, setFormData] = React.useState({
+                name: '',
+                email: '',
+                age: '',
+                bio: '',
+                country: '',
+                subscribe: false
+            });
+
+            const [errors, setErrors] = React.useState({});
+            const handleChange = (e) => {
+                const { name, value, type, checked } = e.target;
+                setFormData(prev => ({
+                    ...prev, [name]: type === 'checkbox' ? checked : value
+                }));
+
+                if (errors[name]) {
+                    setErrors(prev => ({
+                        ...prev, [name]: ''
+                    }));
+                }
+            };
+
+            const validateForm = () => {
+                const newErrors = {};
+
+                if (!formData.name.trim()) {
+                    newErrors.name = 'Имя обязательно';
+                }
+
+                if (!formData.email.trim()) {
+                    newErrors.email = 'Email обязателен';
+                } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+                    newErrors.email = 'Некорректный email';
+                }
+
+                if (formData.age && (formData.age < 1 || formData.age > 100)) {
+                    newErrors.age = 'Возраст должен быть от 1 до 100';
+                }
+
+                if (formData.bio.length > 200) {
+                    newErrors.bio = 'Биография не должна превышать 200 символов';
+                }
+
+                return newErrors;
+            };
+
+            const handleSubmit = (e) => {
+                e.preventDefault();
+                const newErrors = validateForm();
+
+                if (Object.keys(newErrors).length === 0) {
+                    alert('Форма успешно отправлена!');
+                    console.log('Данные формы: ', formData);
+                } else {
+                    setErrors(newErrors);
+                }
+            };
+
+            return (
+                <div className="container">
+                    <h1>Форма с контролем</h1>
+                    <p>Форма с полным контролем состояния</p>
+
+                    <form onSubmit={handleSubmit}>
+                        <div className="form-group">
+                            <label htmlFor="name">Имя *</label>
+                            <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} placeholder="Введите ваше имя" />
+                            {errors.name && <div className="error">{errors.name}</div>}
+                        </div>
+                        <div className="form-group">
+                            <label htmlFor="age">Возраст</label>
+                            <input type="number" id="age" name="age" value={formData.age} onChange={handleChange} placeholder="Ваш возраст" min="1" max="100" />
+                            {errors.age && <div className="error">{errors.age}</div>}
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="country">Страна</label>
+                            <select
+                                id="country"
+                                name="country"
+                                value={formData.country}
+                                onChange={handleChange}
+                            >
+                                <option value="">Выберите страну</option>
+                                <option value="ru">Россия</option>
+                                <option value="us">США</option>
+                                <option value="de">Германия</option>
+                                <option value="fr">Франция</option>
+                            </select>
+                        </div>
+
+                        <div className="form-group">
+                            <label htmlFor="bio">Биография</label>
+                            <textarea id="bio" name="bio" value={formData.bio} onChange={handleChange} placeholder="Расскажи о себе..." rows="4" />
+                            <div className="character-count">
+                                {formData.bio.length}/200 символов
+                            </div>
+                            {errors.bio && <div className="error">{errors.bio}</div>}
+                        </div>
+
+                        <div className="form-group">
+                            <label>
+                                <input type="checkbox" name="subscribe" checked={formData.subscribe} onChange={handleChange} />
+                                Подписаться на рассылку
+                            </label>
+                        </div>
+
+                        <button type="submit" className="submit-btn">
+                            Отправить
+                        </button>
+                    </form>
+
+                    <div className="form=data">
+                        <h3>Текущие данные: </h3>
+                        <pre>{JSON.stringify(formData, null, 2)}</pre>
+                    </div>
+
+                </div>
+
+            );
+        };
+
+        ReactDOM.render(<App />, document.getElementById('root'));
+    </script>
+</body>
+
+</html>
